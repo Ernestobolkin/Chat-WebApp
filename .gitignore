@@ -1,2 +1,4 @@
 node_modules/
 */package-lock.json
+/Chat-App BE/src/config.ts
+/Chat-App BE/src/.env
