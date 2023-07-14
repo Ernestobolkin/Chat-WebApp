@@ -1,15 +1,18 @@
 import express from "express"
 import loginRoute from "./loginRoute"
+import registerRoute from "./registerRoute";
 
 const ROUTES_PATHS = {
     LOGIN: '/login',
+    REGISTER: '/register'
 }
 
 export class Routes {
     routes = ROUTES_PATHS;
     expressRoutes = express.Router()
     controllers:any = {
-        [ROUTES_PATHS.LOGIN]: loginRoute
+        [ROUTES_PATHS.LOGIN]: loginRoute,
+        [ROUTES_PATHS.REGISTER]: registerRoute
     }
 
     constructor() {
@@ -18,8 +21,6 @@ export class Routes {
     
     useRouter = () => {
         Object.keys(this.controllers).forEach((key) => {
-            console.log(key)
-            console.log(`${this.controllers[key]}`)
             this.expressRoutes.use(key, this.controllers[key])
         })
     }
