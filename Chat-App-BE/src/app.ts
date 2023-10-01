@@ -4,12 +4,27 @@ import { requestLogger, responseLogger } from './helpers/logger';
 import mongoose from 'mongoose';
 import { config } from './config';
 import chalk from 'chalk';
+import helmet from 'helmet';
+var cors = require('cors')
 
 const app = express();
 const routes = new Routes();
-// Middleware
+app.use(cors({
+  origin: '*'
+}));
+
 app.use(express.json());
 
+app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      'connect-src': ["'self'", "http://localhost:3000"],
+    },
+  })
+);
 
 
 mongoose

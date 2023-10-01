@@ -9,6 +9,8 @@ interface UserRegister {
 import { User } from "../models/user";
 import { fetchUserByField, insertNewUser } from "../repository/userRepository";
 import { ErrorMessage } from "../interfaces/systemCodes";
+import { hashPassword } from "./passwordService";
+import { UserRepoRegister } from "../interfaces/Iuser";
 
 
 export const registerService = async (userData : UserRegister): Promise<ErrorMessage | any> => {
@@ -23,21 +25,27 @@ export const registerService = async (userData : UserRegister): Promise<ErrorMes
             return emailValidation;
         }
         const emailUserExists = await fetchUserByField("email", email);
-        if(typeof emailUserExists !== 'boolean') {
+        if(!emailUserExists?.code && typeof emailUserExists?.message) {
             return {
                 message: 'Email already exists',
                 code: "RG1"
             }
         }
         const usernameUserExists = await fetchUserByField('username', username);
-        if(typeof usernameUserExists !== 'boolean') {
+        if(!usernameUserExists?.code && typeof usernameUserExists?.message) {
             return {
                 message: 'Username already exists',
                 code: "RG1"
             }
         }
 
-        const insertNewUserError = await insertNewUser(userData);
+        const hashedPassword = await hashPassword(password);
+        const userToInsert:UserRepoRegister = {  
+            username,
+            email,
+            passwordHash: hashedPassword
+        }
+        const insertNewUserError = await insertNewUser(userToInsert);
         if(typeof insertNewUserError !== 'boolean') {
             return insertNewUserError;
         }

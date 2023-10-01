@@ -1,3 +1,4 @@
+import { UserRepoRegister } from "../interfaces/Iuser";
 import { ErrorMessage } from "../interfaces/systemCodes";
 import { User } from "../models/user";
 
@@ -21,7 +22,7 @@ export const fetchUserData = async (userId: string) => {
     }
 }
 
-export const fetchUserByField = async (field: string, value?: string):Promise<any | ErrorMessage> => {
+export const fetchUserByField = async (field: string, value?: string): Promise<any | ErrorMessage> => {
     try {
         const query = !value ? { [field]: field } : { [field]: value };
         const userData = await User.findOne(query);
@@ -34,14 +35,11 @@ export const fetchUserByField = async (field: string, value?: string):Promise<an
         return userData;
     } catch (error) {
         console.error(error);
-        return {
-            message: 'Internal server error',
-            code: "FU2"
-        }
+        throw error;
     }
 }
 
-export const insertNewUser = async (userData: any) => {
+export const insertNewUser = async (userData: UserRepoRegister) => {
     try {
         const newUser = new User(userData);
         const savedUser = await newUser.save();
