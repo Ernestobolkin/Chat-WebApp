@@ -1,5 +1,5 @@
 import express, {Request, Response } from "express";
-import { registerService } from "../service/registerService";
+import { registerService } from "../service/userService";
 
 
 const registerRoute = express.Router();

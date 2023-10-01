@@ -1,19 +1,10 @@
 import { config } from "../config";
-interface UserRegister {
-    username: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-}
-
-import { User } from "../models/user";
-import { fetchUserByField, insertNewUser } from "../repository/userRepository";
+import { UserRegister, UserRepoRegister } from "../interfaces/Iuser";
 import { ErrorMessage } from "../interfaces/systemCodes";
+import { fetchUserByField, insertNewUser } from "../repository/userRepository";
 import { hashPassword } from "./passwordService";
-import { UserRepoRegister } from "../interfaces/Iuser";
 
-
-export const registerService = async (userData : UserRegister): Promise<ErrorMessage | any> => {
+export const registerService = async (userData: UserRegister): Promise<ErrorMessage | any> => {
     try {
         const { username, email, password, confirmPassword } = userData;
         const passwordValidation = validatePassword(password, confirmPassword);
@@ -21,18 +12,18 @@ export const registerService = async (userData : UserRegister): Promise<ErrorMes
             return passwordValidation;
         }
         const emailValidation = validateEmail(email);
-        if(typeof emailValidation !== 'boolean') {
+        if (typeof emailValidation !== 'boolean') {
             return emailValidation;
         }
         const emailUserExists = await fetchUserByField("email", email);
-        if(!emailUserExists?.code && typeof emailUserExists?.message) {
+        if (!emailUserExists?.code && typeof emailUserExists?.message) {
             return {
                 message: 'Email already exists',
                 code: "RG1"
             }
         }
         const usernameUserExists = await fetchUserByField('username', username);
-        if(!usernameUserExists?.code && typeof usernameUserExists?.message) {
+        if (!usernameUserExists?.code && typeof usernameUserExists?.message) {
             return {
                 message: 'Username already exists',
                 code: "RG1"
@@ -40,16 +31,16 @@ export const registerService = async (userData : UserRegister): Promise<ErrorMes
         }
 
         const hashedPassword = await hashPassword(password);
-        const userToInsert:UserRepoRegister = {  
+        const userToInsert: UserRepoRegister = {
             username,
             email,
             passwordHash: hashedPassword
         }
         const insertNewUserError = await insertNewUser(userToInsert);
-        if(typeof insertNewUserError !== 'boolean') {
+        if (typeof insertNewUserError !== 'boolean') {
             return insertNewUserError;
         }
-        
+
         return {
             message: 'User registered successfully',
             code: ""
@@ -64,15 +55,14 @@ export const registerService = async (userData : UserRegister): Promise<ErrorMes
     }
 }
 
-
-const validatePassword = (password: string, confirmPassword: string):ErrorMessage | boolean => {
+const validatePassword = (password: string, confirmPassword: string): ErrorMessage | boolean => {
     if (password !== confirmPassword) {
         return {
             message: 'Passwords do not match',
             code: "RG2"
         }
     }
-    if(!config.PASSWORD_REGEX.test(password)) {
+    if (!config.PASSWORD_REGEX.test(password)) {
         return {
             message: 'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character',
             code: "RG3"
@@ -83,7 +73,7 @@ const validatePassword = (password: string, confirmPassword: string):ErrorMessag
 }
 
 
-const validateEmail = (email: string):ErrorMessage | boolean => {
+const validateEmail = (email: string): ErrorMessage | boolean => {
     if (!config.EMAIL_REGEX.test(email)) {
         return {
             message: 'Email is invalid',
@@ -91,4 +81,15 @@ const validateEmail = (email: string):ErrorMessage | boolean => {
         }
     }
     return true;
+}
+
+
+export const loginService = async (userData: UserRegister): Promise<ErrorMessage | any> => {
+    try {
+        const user = await fetchUserByField('email', userData.email);
+        console.log(user);
+    } catch (error) {
+
+    }
+
 }

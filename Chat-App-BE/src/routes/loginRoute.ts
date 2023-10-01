@@ -1,11 +1,15 @@
 import express, {Request, Response } from "express";
+import { loginService } from "../service/userService";
 
 const loginRoute = express.Router();
 
-loginRoute.post('/', (req: Request, res: Response) => {
-    return res.json({
-        message: 'Login route'
-    });
+loginRoute.post('/', async (req: Request, res: Response) => {
+    try {
+        const userData = req.body;
+        const response = await loginService(userData);
+    } catch (error) {
+        
+    }
 });
 
 
