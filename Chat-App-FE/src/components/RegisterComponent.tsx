@@ -1,5 +1,6 @@
 import React, { useState, FormEvent } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { generalRequest } from '../service/api-service';
 
 interface FormData {
   username: string;
@@ -21,10 +22,9 @@ const RegisterComponent: React.FC = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Perform form submission or validation here
-    // You can access the form data using formData state
+    await generalRequest('register', 'POST', formData);
   };
 
   return (
