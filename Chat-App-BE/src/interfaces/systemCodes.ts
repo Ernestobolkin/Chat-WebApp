@@ -1,5 +1,5 @@
 export interface ErrorMessage {
-    message: string;
-    code: string;
+    message?: string;
+    code?: string;
 }
 

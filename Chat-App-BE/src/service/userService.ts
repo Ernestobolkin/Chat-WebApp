@@ -1,8 +1,11 @@
 import { config } from "../config";
-import { UserRegister, UserRepoRegister } from "../interfaces/Iuser";
+import { UserRegister, UserRepoRegister } from "../interfaces/user";
 import { ErrorMessage } from "../interfaces/systemCodes";
 import { fetchUserByField, insertNewUser } from "../repository/userRepository";
 import { hashPassword } from "./passwordService";
+import { RegisterCodes, GeneralCodes } from "../enums/SystemCodes";
+
+
 
 export const registerService = async (userData: UserRegister): Promise<ErrorMessage | any> => {
     try {
@@ -19,14 +22,14 @@ export const registerService = async (userData: UserRegister): Promise<ErrorMess
         if (!emailUserExists?.code && typeof emailUserExists?.message) {
             return {
                 message: 'Email already exists',
-                code: "RG1"
+                code: RegisterCodes.ERROR_EMAIL_EXISTS,
             }
         }
         const usernameUserExists = await fetchUserByField('username', username);
         if (!usernameUserExists?.code && typeof usernameUserExists?.message) {
             return {
                 message: 'Username already exists',
-                code: "RG1"
+                code: RegisterCodes.ERROR_USER_NAME_EXISTS,
             }
         }
 
@@ -43,14 +46,14 @@ export const registerService = async (userData: UserRegister): Promise<ErrorMess
 
         return {
             message: 'User registered successfully',
-            code: ""
+            code: GeneralCodes.OK
         }
 
     } catch (error) {
         console.error(error);
         return {
             message: 'Internal server error',
-            code: "RG1"
+            code: RegisterCodes.ERROR_COULD_NOT_CREATE_USER
         }
     }
 }
@@ -59,13 +62,13 @@ const validatePassword = (password: string, confirmPassword: string): ErrorMessa
     if (password !== confirmPassword) {
         return {
             message: 'Passwords do not match',
-            code: "RG2"
+            code: RegisterCodes.ERROR_PASSWORDS_DO_NOT_MATCH
         }
     }
     if (!config.PASSWORD_REGEX.test(password)) {
         return {
             message: 'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character',
-            code: "RG3"
+            code: RegisterCodes.ERROR_PASSWORDS_PATTERN
         }
     }
 
@@ -77,7 +80,7 @@ const validateEmail = (email: string): ErrorMessage | boolean => {
     if (!config.EMAIL_REGEX.test(email)) {
         return {
             message: 'Email is invalid',
-            code: "RG4"
+            code: RegisterCodes.ERROR_EMAIL_PATTERN
         }
     }
     return true;
