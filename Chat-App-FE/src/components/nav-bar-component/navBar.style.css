@@ -1,0 +1,20 @@
+/* NavBar.css */
+
+/* Change the background color of the navbar */
+.navbar {
+    background-color: #3498db; /* Example color: blue */
+    color : #292323;
+  }
+  
+  /* Change the text color of the navbar links */
+  .navbar-nav .nav-link {
+    color: #ffffff; /* Example color: white */
+    color : #292323;
+  }
+  
+  /* Add background color on hover for the navbar links */
+  .navbar-nav .nav-link:hover {
+    background-color: #2980b9; 
+    color : #c0bfbf;
+    /* Example color: darker blue */
+  }
