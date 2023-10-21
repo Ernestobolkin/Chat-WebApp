@@ -2,8 +2,9 @@ import { config } from "../config";
 import { UserRegister, UserRepoRegister } from "../interfaces/user";
 import { ErrorMessage } from "../interfaces/systemCodes";
 import { fetchUserByField, insertNewUser } from "../repository/userRepository";
-import { hashPassword } from "./passwordService";
-import { RegisterCodes, GeneralCodes } from "../enums/SystemCodes";
+import { hashPassword, verifyPassword } from "./passwordService";
+import { RegisterCodes, GeneralCodes, LoginCodes } from "../enums/SystemCodes";
+import { generateToken } from "./jsonwebtokenMiddleware";
 
 
 
@@ -90,9 +91,30 @@ const validateEmail = (email: string): ErrorMessage | boolean => {
 export const loginService = async (userData: UserRegister): Promise<ErrorMessage | any> => {
     try {
         const user = await fetchUserByField('email', userData.email);
-        console.log(user);
+        if (!user?._id) {
+            return {
+                message: 'User does not exist',
+                code: LoginCodes.ERROR_WRONG_EMAIL_OR_PASSWORD
+            }            
+        }
+
+        const passwordMatch = await verifyPassword(userData.password, user.passwordHash);
+        if (!passwordMatch) {
+            return {
+                message: 'Wrong password',
+                code: LoginCodes.ERROR_WRONG_EMAIL_OR_PASSWORD
+            }
+        }
+
+        const token = generateToken(user._id);
+        return {
+            token,
+        }
     } catch (error) {
-
+        console.error(error);
+        return {
+            message: 'Internal server error',
+            code: LoginCodes.ERROR_COULD_NOT_LOGIN
+        }
     }
-
 }

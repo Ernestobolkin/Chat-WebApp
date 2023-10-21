@@ -7,6 +7,11 @@ export enum GeneralCodes {
     OK = "",
 }
 
+export enum LoginCodes {
+    ERROR_WRONG_EMAIL_OR_PASSWORD = "lg1",
+    ERROR_COULD_NOT_LOGIN = "lg",
+}
+
 
 
 export enum RegisterCodes {

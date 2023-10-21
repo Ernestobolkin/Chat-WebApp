@@ -4,7 +4,7 @@ import { User } from "../models/user";
 import { handleCatchError } from "../service/errorHandlerService";
 
 
-export const fetchUserData = async (userId: string) => {
+export const fetchUserDataById = async (userId: string) => {
     try {
         return await User.findById(userId);
     } catch (error) {

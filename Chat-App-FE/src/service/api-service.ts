@@ -13,8 +13,8 @@ import environment from "../config";
 // }
 
 interface User {
-    userName: string;
-    passWord: string;
+    email: string;
+    password: string;
 }
 
 export const loginRequest = async( userData:User ) => {
