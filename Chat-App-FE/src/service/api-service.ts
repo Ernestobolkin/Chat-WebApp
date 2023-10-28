@@ -1,5 +1,6 @@
 import axios from "axios";
 import environment from "../config";
+import useAuthStore, { AuthStoreState } from "../stores/authStore";
 
 interface User {
     email: string;
@@ -11,9 +12,19 @@ export const loginRequest = async( userData:User ) => {
         const response = await generalRequest("login", "POST", userData);
         if(response && response.data){
             localStorage.setItem("token", response.data.token);
+            return true
         }
+        return false
     }catch(error){
         console.log(error)
+        return false
+    }
+}
+
+const logOut = () => {
+    const { isSignedIn, signOut }: AuthStoreState = useAuthStore.getState();
+    if (isSignedIn) {
+        signOut();
     }
 }
 
@@ -45,9 +56,14 @@ export const generalRequest = async (url: string, method: string, body?: any) =>
        }
     } catch (error:any) {
         const responseError = error?.response;
-        if(responseError && responseError.status === 401){
+        if(
+            responseError && responseError.status === 403 || 
+            responseError.data.message === "Unauthorized" ||
+            responseError.status === 401
+            ){
             localStorage.removeItem("token");
             window.location.href = "/login";
+            logOut();
         }
         return responseError;
     }
