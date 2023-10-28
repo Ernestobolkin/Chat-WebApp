@@ -11,3 +11,9 @@ export interface ToastProps {
     message: ReactNode;
     type?: string;
 }
+
+export interface InputPasswordProps {
+    name?: string;
+    value: string;
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}

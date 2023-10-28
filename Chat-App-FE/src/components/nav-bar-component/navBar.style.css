@@ -12,3 +12,13 @@
     background-color: #2980b9 !important; 
     color : #c0bfbf!important;
   }
+
+  .container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  #navbarNav{
+    flex-grow: 0
+  }

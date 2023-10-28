@@ -1,0 +1,11 @@
+.component-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-container{
+    display: flex;
+    width: max-content;
+}

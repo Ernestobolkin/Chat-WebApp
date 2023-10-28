@@ -29,7 +29,7 @@ const RegisterComponent: React.FC = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container component-container mt-5">
       <h3>Register</h3>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">

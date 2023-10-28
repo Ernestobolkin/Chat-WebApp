@@ -1,6 +1,9 @@
 import React, { FormEvent, useState } from "react";
-import { generalRequest, loginRequest } from "../../service/api-service";
+import { loginRequest } from "../../service/api-service";
 import SuccessButton from "../Reusable/button";
+import PasswordInput from "../Reusable/password-input/password-input";
+import "./Login.style.css";
+
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +17,7 @@ const Login: React.FC = () => {
       ...formData,
       [name]: value,
     });
+    console.log(formData)
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -21,17 +25,12 @@ const Login: React.FC = () => {
     await loginRequest(formData);
   };
 
-  const testUrl = async()=>{
-    const response = await generalRequest('test', 'GET')
-    const data = await response.json();
-    console.log(data);
-  }
-
   return (
-    <div className="container">
+    <div className="container component-container">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
+        <div className="form-group input-container">
+          <div>
           <label htmlFor="email">Email:</label>
           <input
             type="text"
@@ -43,27 +42,20 @@ const Login: React.FC = () => {
             onChange={handleInputChange}
             required
           />
+          </div>
         </div>
         <div className="form-group">
           <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            className="form-control"
-            placeholder="Enter your password"
+          <PasswordInput
+            name="login"
             value={formData.password}
             onChange={handleInputChange}
-            required
-          />
+          ></PasswordInput>
         </div>
         <SuccessButton className="btn btn-success login">
           Login
         </SuccessButton>
       </form>
-      <SuccessButton onClick={testUrl} className="btn btn-success login">
-          test
-        </SuccessButton>
     </div>
   );
 };

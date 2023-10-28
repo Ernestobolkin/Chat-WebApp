@@ -1,17 +1,6 @@
 import axios from "axios";
 import environment from "../config";
 
-// interface Response {
-//     data: any;
-//     status: number;
-//     code?: number;
-// }
-
-// interface Error {
-//     message: string;
-//     code: number;
-// }
-
 interface User {
     email: string;
     password: string;
@@ -54,8 +43,13 @@ export const generalRequest = async (url: string, method: string, body?: any) =>
                }
             default:
        }
-    } catch (error) {
-        return error;
+    } catch (error:any) {
+        const responseError = error?.response;
+        if(responseError && responseError.status === 401){
+            localStorage.removeItem("token");
+            window.location.href = "/login";
+        }
+        return responseError;
     }
 };
 

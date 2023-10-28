@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { generalRequest } from "../../service/api-service";
 import "./NavBar.style.css";
+import SuccessButton from "../Reusable/button";
 
 
 const NavBar: React.FC = () => {
@@ -8,9 +10,16 @@ const NavBar: React.FC = () => {
   useEffect(() => {
     console.log(location)
   }, [location])
+
+  const testUrl = async()=>{
+    const response = await generalRequest('test', 'GET')
+    console.log(response);
+  }
+
+
   return (
-    <div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <div className="navbar-container">
+      <nav className="navbar navbar-expand-lg ">
         <div className="container">
           <Link className="navbar-brand" to="/">Blog-Platform</Link>
           <button
@@ -24,6 +33,9 @@ const NavBar: React.FC = () => {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
+          <SuccessButton onClick={testUrl} className="btn btn-success login">
+            test
+          </SuccessButton>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
