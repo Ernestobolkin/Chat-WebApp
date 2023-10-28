@@ -19,7 +19,6 @@ const PasswordInput: React.FC<InputPasswordProps> = ({
       ...password,
       [name]: value,
     });
-    console.log(password)
     onChange(event);
   }
 
