@@ -1,21 +1,19 @@
-import React, { useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React from "react";
+import { Link, NavLink } from "react-router-dom";
 import { generalRequest } from "../../service/api-service";
 import "./NavBar.style.css";
 import SuccessButton from "../Reusable/button";
+import useAuthStore from "../../stores/authStore";
 
 
 const NavBar: React.FC = () => {
-  const location = useLocation();
-  useEffect(() => {
-    console.log(location)
-  }, [location])
 
-  const testUrl = async()=>{
+  const { isSignedIn, signIn } = useAuthStore();
+
+  const testUrl = async () => {
     const response = await generalRequest('test', 'GET')
     console.log(response);
   }
-
 
   return (
     <div className="navbar-container">
@@ -39,15 +37,43 @@ const NavBar: React.FC = () => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
-                <Link className={`nav-link ${location.pathname === "/" ? "active" : ""}`} to="/">Home</Link>
+                <NavLink
+                  className={({ isActive }) => "nav-link" + (isActive ? " active" : "")}
+                  to="/"
+                  end
+                >
+                  Home
+                </NavLink>
               </li>
               <li className="nav-item">
-                <Link className={`nav-link ${location.pathname === "/register" ? "active" : ""}`} to="/register">Register</Link>
+                <NavLink
+                  className={({ isActive }) => "nav-link" + (isActive ? " active" : "")}
+                  to="/register"
+                >
+                  Register
+                </NavLink>
               </li>
               <li className="nav-item">
-                <Link className={`nav-link ${location.pathname === "/login" ? "active" : ""}`} to="/login">Login</Link>
+                <NavLink
+                  className={({ isActive }) => "nav-link" + (isActive ? " active" : "")}
+                  to="/login"
+                >
+                  Login
+                </NavLink>
               </li>
             </ul>
+          </div>
+          <div>
+            {isSignedIn ? (
+              <>
+                <div className={"circle-icon active-icon"}></div>
+                {/* TODO: add profile component */}
+              </>
+            ) : (
+              <>
+                <div className={"circle-icon"} onClick={signIn} ></div>
+              </>
+            )}
           </div>
         </div>
       </nav>

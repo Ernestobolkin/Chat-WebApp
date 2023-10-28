@@ -1,5 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import { loginRequest } from "../../service/api-service";
+import useAuthStore from "../../stores/authStore";
 import SuccessButton from "../Reusable/button";
 import PasswordInput from "../Reusable/password-input/password-input";
 import "./Login.style.css";
@@ -10,6 +11,7 @@ const Login: React.FC = () => {
     email: "",
     password: "",
   });
+  const { signIn, signOut} = useAuthStore();
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -17,12 +19,16 @@ const Login: React.FC = () => {
       ...formData,
       [name]: value,
     });
-    console.log(formData)
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await loginRequest(formData);
+    const res = await loginRequest(formData);
+    if (res) {
+      signIn();
+    }else{
+      signOut()
+    }
   };
 
   return (
