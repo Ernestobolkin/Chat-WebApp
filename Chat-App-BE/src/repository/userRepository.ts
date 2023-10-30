@@ -1,5 +1,5 @@
 import { UserRepoRegister } from "../interfaces/user";
-import { ErrorMessage } from "../interfaces/systemCodes";
+import { ErrorMessage } from "../interfaces/system";
 import { User } from "../models/user";
 import { handleCatchError } from "../service/errorHandlerService";
 

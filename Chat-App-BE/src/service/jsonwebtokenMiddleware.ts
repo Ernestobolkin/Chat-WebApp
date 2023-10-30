@@ -3,17 +3,7 @@ import jwt from "jsonwebtoken";
 import { fetchUserDataById } from "../repository/userRepository";
 import { config } from "../config";
 
-interface JwtPayload {
-    userId: string;
-}
 
-declare global {
-namespace Express {
-    interface Request {
-    userId?: string;
-    }
-}
-}
 
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.header("Authorization")?.replace("Bearer ", "");

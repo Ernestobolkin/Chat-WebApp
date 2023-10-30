@@ -1,6 +1,6 @@
 import { config } from "../config";
 import { UserRegister, UserRepoRegister } from "../interfaces/user";
-import { ErrorMessage } from "../interfaces/systemCodes";
+import { ErrorMessage } from "../interfaces/system";
 import { fetchUserByField, insertNewUser } from "../repository/userRepository";
 import { hashPassword, verifyPassword } from "./passwordService";
 import { RegisterCodes, GeneralCodes, LoginCodes } from "../enums/SystemCodes";
