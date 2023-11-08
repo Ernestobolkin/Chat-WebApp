@@ -36,9 +36,14 @@ mongoose
     app.use('/api', routes.expressRoutes);
 
     // Error handling middleware
-    app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-      console.error(err);
-      res.status(500).json({ error: 'Internal server error' });
+    app.use((err: Error, _req: Request, res: Response, _next: NextFunction): void => {
+      console.log(chalk.red(err?.message));
+      if(err.name === 'UnauthorizedError') {
+        res.status(401).send('Invalid token');
+      }
+      else {
+        res.status(500).send('GENERAL_ERROR');
+      }
     });
 
     // Start the server

@@ -2,10 +2,12 @@ import express from "express"
 import { authenticate } from "../service/jsonwebtokenMiddleware";
 import loginRoute from "./loginRoute"
 import registerRoute from "./registerRoute";
+import postRoute from "./postRoute";
 
 const ROUTES_PATHS = {
     LOGIN: '/login',
-    REGISTER: '/register'
+    REGISTER: '/register',
+    POST: '/post'
 }
 
 const test = express.Router();
@@ -19,6 +21,7 @@ export class Routes {
     controllers:any = {
         [ROUTES_PATHS.LOGIN]: loginRoute,
         [ROUTES_PATHS.REGISTER]: registerRoute,
+        [ROUTES_PATHS.POST]: postRoute, //TODO: add post route controller here [ROUTES_PATHS.CREATEPOST]: postRoute,
         "/test":test
     }
 
@@ -28,7 +31,7 @@ export class Routes {
     
     useRouter = () => {
         Object.keys(this.controllers).forEach((key) => {
-            this.expressRoutes.use(key, this.controllers[key])
+            this.expressRoutes.use(key, authenticate, this.controllers[key])
         })
     }
 }

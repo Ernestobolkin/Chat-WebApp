@@ -19,8 +19,8 @@ const postSchema = new mongoose.Schema({
         ref: 'User'
     }],
     comments: [{
-
-
+        type:Array,
+        ref: 'Comment' //TODO plan on a way to save the comments
     }],
 
 }, {

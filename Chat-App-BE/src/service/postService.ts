@@ -1,11 +1,10 @@
 import { PostPut } from "../interfaces/post";
 import { ErrorMessage } from "../interfaces/system";
 import { PostCodes, GeneralCodes } from "../enums/SystemCodes";
+import { UserInterface } from "../interfaces/user";
+import { insertNewPost, fetchAllPosts } from "../repository/postRepository";
 
-
-
-
-export const putPostService = async (postData: PostPut, userId: string): Promise<ErrorMessage | any> => {
+export const createPostService = async (postData: PostPut, user: UserInterface): Promise<ErrorMessage | any> => {
     try {
         const { textContent, imageContent } = postData;
         if (!textContent) {
@@ -14,8 +13,15 @@ export const putPostService = async (postData: PostPut, userId: string): Promise
                 code: PostCodes.ERROR_MISSING_PARAMETERS
             }
         }
+        //add image validation here
+        const post = {
+            textContent,
+            imageContent,
+            author:user._id,
+        }
+        await insertNewPost(post)
         return {
-            message: 'Post updated successfully',
+            message: 'Post created successfully',
             code: GeneralCodes.OK
         }
     } catch (error) {
@@ -23,6 +29,26 @@ export const putPostService = async (postData: PostPut, userId: string): Promise
         return {
             message: 'Internal server error',
             code: PostCodes.ERROR_COULD_NOT_CREATE_POST
+        }
+    }
+}
+
+
+export const fetchAllPostsService = async (): Promise<ErrorMessage | any>  => {
+    try {
+        const posts = await fetchAllPosts();
+        if(!posts) {
+            return {
+                message: 'Could not fetch posts',
+                code: PostCodes.ERROR_COULD_NOT_FETCH_POSTS
+            }
+        }
+        return posts;
+    } catch (error) {
+        console.error(error);
+        return {
+            message: 'Internal server error',
+            code: PostCodes.ERROR_COULD_NOT_FETCH_POSTS
         }
     }
 }
