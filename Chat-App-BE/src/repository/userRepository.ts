@@ -1,10 +1,11 @@
-import { UserRepoRegister } from "../interfaces/user";
+import { UserRepoRegisterInterface } from "../interfaces/user";
 import { ErrorMessage } from "../interfaces/system";
 import { User } from "../models/user";
 import { handleCatchError } from "../service/errorHandlerService";
+import { UserInterface } from "../interfaces/user";
 
 
-export const fetchUserDataById = async (userId: string) => {
+export const fetchUserDataById = async (userId: string):Promise<UserInterface | null> => {
     try {
         return await User.findById(userId);
     } catch (error) {
@@ -21,7 +22,7 @@ export const fetchUserByField = async (field: string, value?: string): Promise<a
     }
 }
 
-export const insertNewUser = async (userData: UserRepoRegister) => {
+export const insertNewUser = async (userData: UserRepoRegisterInterface) => {
     try {
         const newUser = new User(userData);
         return await newUser.save();

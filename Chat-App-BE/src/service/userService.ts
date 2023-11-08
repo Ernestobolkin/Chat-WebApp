@@ -1,14 +1,12 @@
 import { config } from "../config";
-import { UserRegister, UserRepoRegister } from "../interfaces/user";
+import { UserRegisterInterface, UserRepoRegisterInterface } from "../interfaces/user";
 import { ErrorMessage } from "../interfaces/system";
 import { fetchUserByField, insertNewUser } from "../repository/userRepository";
 import { hashPassword, verifyPassword } from "./passwordService";
 import { RegisterCodes, GeneralCodes, LoginCodes } from "../enums/SystemCodes";
 import { generateToken } from "./jsonwebtokenMiddleware";
 
-
-
-export const registerService = async (userData: UserRegister): Promise<ErrorMessage | any> => {
+export const registerService = async (userData: UserRegisterInterface): Promise<ErrorMessage | any> => {
     try {
         const { username, email, password, confirmPassword } = userData;
         const passwordValidation = validatePassword(password, confirmPassword);
@@ -20,14 +18,14 @@ export const registerService = async (userData: UserRegister): Promise<ErrorMess
             return emailValidation;
         }
         const emailUserExists = await fetchUserByField("email", email);
-        if (!emailUserExists?.code && typeof emailUserExists?.message) {
+        if (emailUserExists) {
             return {
                 message: 'Email already exists',
                 code: RegisterCodes.ERROR_EMAIL_EXISTS,
             }
         }
         const usernameUserExists = await fetchUserByField('username', username);
-        if (!usernameUserExists?.code && typeof usernameUserExists?.message) {
+        if (usernameUserExists) {
             return {
                 message: 'Username already exists',
                 code: RegisterCodes.ERROR_USER_NAME_EXISTS,
@@ -35,7 +33,7 @@ export const registerService = async (userData: UserRegister): Promise<ErrorMess
         }
 
         const hashedPassword = await hashPassword(password);
-        const userToInsert: UserRepoRegister = {
+        const userToInsert: UserRepoRegisterInterface = {
             username,
             email,
             passwordHash: hashedPassword
@@ -66,7 +64,7 @@ const validatePassword = (password: string, confirmPassword: string): ErrorMessa
             code: RegisterCodes.ERROR_PASSWORDS_DO_NOT_MATCH
         }
     }
-    if (!config.PASSWORD_REGEX.test(password)) {
+    if (!(config.PASSWORD_REGEX).test(password)) {
         return {
             message: 'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character',
             code: RegisterCodes.ERROR_PASSWORDS_PATTERN
@@ -88,7 +86,7 @@ const validateEmail = (email: string): ErrorMessage | boolean => {
 }
 
 
-export const loginService = async (userData: UserRegister): Promise<ErrorMessage | any> => {
+export const loginService = async (userData: UserRegisterInterface): Promise<ErrorMessage | any> => {
     try {
         const user = await fetchUserByField('email', userData.email);
         if (!user?._id) {
@@ -108,7 +106,7 @@ export const loginService = async (userData: UserRegister): Promise<ErrorMessage
 
         const token = generateToken(user._id);
         return {
-            token,
+            token, 
         }
     } catch (error) {
         console.error(error);
