@@ -35,17 +35,6 @@ mongoose
     app.use('/api', requestLogger, responseLogger);
     app.use('/api', routes.expressRoutes);
 
-    // Error handling middleware
-    app.use((err: Error, _req: Request, res: Response, _next: NextFunction): void => {
-      console.log(chalk.red(err?.message));
-      if(err.name === 'UnauthorizedError') {
-        res.status(401).send('Invalid token');
-      }
-      else {
-        res.status(500).send('GENERAL_ERROR');
-      }
-    });
-
     // Start the server
     const port = config.PORT;
     app.listen(port, () => {
