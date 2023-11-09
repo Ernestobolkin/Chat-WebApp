@@ -6,6 +6,10 @@ import { config } from "../config";
 
 
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
+  const baseUrl = req.baseUrl;
+  if(baseUrl === "/api/login" || baseUrl === "/api/register") {
+    return next();
+  }
   const token = req.header("Authorization")?.replace("Bearer ", "");
   if (!token) {
     return res.status(401).json({ message: "Authentication failed" });
