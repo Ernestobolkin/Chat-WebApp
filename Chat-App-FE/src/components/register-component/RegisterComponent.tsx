@@ -2,6 +2,7 @@ import React, { useState, FormEvent } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { generalRequest } from '../../service/api-service';
 import SuccessButton from '../Reusable/button';
+import { redirect } from "react-router-dom";
 
 interface FormData {
   username: string;
@@ -19,13 +20,17 @@ const RegisterComponent: React.FC = () => {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await generalRequest('register', 'POST', formData);
+    const response = await generalRequest('register', 'POST', formData);
+    if(response) {
+      return redirect('/login');
+    }
   };
 
   return (

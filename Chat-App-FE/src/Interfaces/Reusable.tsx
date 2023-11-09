@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { Socket } from "socket.io-client";
 
 export interface ButtonProps {
     onClick?: () => void;
@@ -16,4 +17,15 @@ export interface InputPasswordProps {
     name?: string;
     value: string;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+
+export interface PostCreationProps {
+    socket: Socket;
+}
+  
+
+export interface User {
+    email: string;
+    password: string;
 }

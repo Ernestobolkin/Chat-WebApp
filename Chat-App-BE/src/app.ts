@@ -20,7 +20,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const server = http.createServer(app);
-const io = new SocketIOServer(server);
+const io = new SocketIOServer(server,
+  {
+    cors: {
+      origin: 'http://localhost:5173',
+      methods: ["GET", "POST"]
+    }
+  });
 
 app.use(
   helmet.contentSecurityPolicy({
@@ -56,7 +62,6 @@ mongoose
     const socketIORoutes = new SocketIORoutes(io);
     socketIORoutes.setupRoutes();
 
-    const PORT = process.env.PORT || 3000;
     const SOCKET_PORT = process.env.SOCKET_PORT || 3001;
     server.listen(SOCKET_PORT, () => {
       console.log(chalk.greenBright(`Socket IO Server is running on port ${SOCKET_PORT}`));

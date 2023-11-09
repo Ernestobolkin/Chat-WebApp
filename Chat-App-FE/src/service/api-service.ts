@@ -1,17 +1,13 @@
 import axios from "axios";
 import environment from "../config";
-import useAuthStore, { AuthStoreState } from "../stores/authStore";
-
-interface User {
-    email: string;
-    password: string;
-}
+import { User } from "../Interfaces/Reusable";
+import { logOut } from "./auth-service";
 
 export const loginRequest = async( userData:User ) => {
     try{
         const response = await generalRequest("login", "POST", userData);
-        if(response && response.data){
-            localStorage.setItem("token", response.data.token);
+        if(response && !response?.data?.code){
+            sessionStorage.setItem("token", response.token);
             return true
         }
         return false
@@ -21,12 +17,7 @@ export const loginRequest = async( userData:User ) => {
     }
 }
 
-const logOut = () => {
-    const { isSignedIn, signOut }: AuthStoreState = useAuthStore.getState();
-    if (isSignedIn) {
-        signOut();
-    }
-}
+
 
 export const generalRequest = async (url: string, method: string, body?: any) => {
     const api = `${environment.API_URL}/${url}`;
@@ -40,28 +31,31 @@ export const generalRequest = async (url: string, method: string, body?: any) =>
             case "POST":
                {
                     const response = await axios.post(api, body, { headers: getHeaders() });
-                    return response;
+                    return response?.data;
                }
             case "PUT":
                {
                     const response = await axios.put(api, body, { headers: getHeaders() });
-                    return response;
+                    return response?.data;
                }
             case "DELETE":
                {
                     const response = await axios.delete(api, { headers: getHeaders() });
-                    return response;
+                    return response?.data;
                }
             default:
        }
     } catch (error:any) {
         const responseError = error?.response;
+        const url = responseError?.config?.url;
         if(
-            responseError && responseError.status === 403 || 
+            !url.includes("register") && 
+            !url.includes("login") && 
+            (responseError && responseError.status === 403 || 
             responseError.data.message === "Unauthorized" ||
-            responseError.status === 401
+            responseError.status === 401)
             ){
-            localStorage.removeItem("token");
+            sessionStorage.removeItem("token");
             window.location.href = "/login";
             logOut();
         }
@@ -71,7 +65,7 @@ export const generalRequest = async (url: string, method: string, body?: any) =>
 
 const getHeaders = () => {
     let headers = {}
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if(token){
         headers = {
             Authorization: `Bearer ${token}`,

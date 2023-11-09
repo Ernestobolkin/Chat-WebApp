@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import usePostStore from '../../stores/postStore'; // Adjust the import path
+import { PostCreationProps } from '../../Interfaces/Reusable';
 
-const PostCreationComponent: React.FC = () => {
+
+const PostCreationComponent: React.FC<PostCreationProps> = ({ socket }) => {
+
   const [newPostText, setNewPostText] = useState('');
-  const addPost = usePostStore((state:any) => state.addPost);
 
-  const handlePostSubmit = (e) => {
+    const handlePostSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (newPostText.trim() !== '') {
-      addPost({ text: newPostText }); // Add the new post to the store
+      // Emit a "createPost" event with the new post data
+      socket.emit('createPost', { textContent: newPostText });
       setNewPostText('');
     }
   };
