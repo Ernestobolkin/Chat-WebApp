@@ -17,3 +17,8 @@ export interface InputPasswordProps {
     value: string;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
+
+export interface User {
+    email: string;
+    password: string;
+}

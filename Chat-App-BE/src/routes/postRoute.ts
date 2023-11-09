@@ -24,7 +24,7 @@ postRoute.post('/create', async (req: Request, res: Response) => {
 });
 
 
-postRoute.get('/all', async (req: Request, res: Response) => {
+postRoute.get('/', async (req: Request, res: Response) => {
     try {
         const posts = await fetchAllPostsService();
         if(posts.code) {

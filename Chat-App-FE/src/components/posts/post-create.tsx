@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import usePostStore from '../../stores/postStore'; // Adjust the import path
+import { generalRequest } from '../../service/api-service';
 
 const PostCreationComponent: React.FC = () => {
   const [newPostText, setNewPostText] = useState('');
   const addPost = usePostStore((state:any) => state.addPost);
 
-  const handlePostSubmit = (e) => {
+  const handlePostSubmit = async (e) => {
     e.preventDefault();
     if (newPostText.trim() !== '') {
-      addPost({ text: newPostText }); // Add the new post to the store
+      addPost({ textContent: newPostText });
+      await generalRequest('posts/create', 'POST', { textContent: newPostText });
+      //TODO add toast
       setNewPostText('');
     }
   };

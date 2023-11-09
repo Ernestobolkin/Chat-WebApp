@@ -7,7 +7,7 @@ import postRoute from "./postRoute";
 const ROUTES_PATHS = {
     LOGIN: '/login',
     REGISTER: '/register',
-    POST: '/post'
+    POSTS: '/posts'
 }
 
 const test = express.Router();
@@ -21,7 +21,7 @@ export class Routes {
     controllers:any = {
         [ROUTES_PATHS.LOGIN]: loginRoute,
         [ROUTES_PATHS.REGISTER]: registerRoute,
-        [ROUTES_PATHS.POST]: postRoute, //TODO: add post route controller here [ROUTES_PATHS.CREATEPOST]: postRoute,
+        [ROUTES_PATHS.POSTS]: postRoute, //TODO: add post route controller here [ROUTES_PATHS.CREATEPOST]: postRoute,
         "/test":test
     }
 
