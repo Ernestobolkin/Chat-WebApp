@@ -4,11 +4,27 @@ import { generalRequest } from "../../service/api-service";
 import "./NavBar.style.css";
 import SuccessButton from "../Reusable/button";
 import useAuthStore from "../../stores/authStore";
+import { NavBarContext, SystemRoutes } from "../../enums/generalEnum";
 
 
 const NavBar: React.FC = () => {
 
   const { isSignedIn, signIn } = useAuthStore();
+
+  const buttonList = [
+    {
+      text: NavBarContext.HOME,
+      link: SystemRoutes.HOME,
+    },
+    {
+      text: NavBarContext.REGISTER,
+      link: SystemRoutes.REGISTER,
+    },
+    {
+      text: NavBarContext.LOGIN,
+      link: SystemRoutes.LOGIN,
+    }
+  ]
 
   const testUrl = async () => {
     const response = await generalRequest('test', 'GET')
@@ -36,37 +52,26 @@ const NavBar: React.FC = () => {
           </SuccessButton>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <NavLink
-                  className={({ isActive }) => "nav-link" + (isActive ? " active" : "")}
-                  to="/"
-                  end
-                >
-                  Home
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink
-                  className={({ isActive }) => "nav-link" + (isActive ? " active" : "")}
-                  to="/register"
-                >
-                  Register
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink
-                  className={({ isActive }) => "nav-link" + (isActive ? " active" : "")}
-                  to="/login"
-                >
-                  Login
-                </NavLink>
-              </li>
+              {
+                buttonList.map((button, index) => (
+                  <li className="nav-item" key={index}>
+                    <NavLink
+                      className={({ isActive }) => "nav-link" + (isActive ? " active" : "")}
+                      to={button.link}
+                    >
+                      {button.text}
+                    </NavLink>
+                  </li>
+                ))
+              }
             </ul>
           </div>
           <div>
             {isSignedIn ? (
               <>
-                <div className={"circle-icon active-icon"}></div>
+                <div className={"circle-icon active-icon"}>
+                  <span>T</span>
+                </div>
                 {/* TODO: add profile component */}
               </>
             ) : (
