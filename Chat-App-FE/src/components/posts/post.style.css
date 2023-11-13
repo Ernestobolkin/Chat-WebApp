@@ -1,0 +1,49 @@
+.list-group-item,
+.post-container,
+.row,
+.card,
+.card-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.post-container {
+    min-width: 20vw;
+}
+
+.row {
+    flex-direction: column;
+}
+
+.card {
+    min-width: 600px;
+}
+
+.card-footer,
+.card-header,
+.card-body {
+    width: 100%;
+}
+
+.details-container {
+    width: 80%;
+    height: 250px;
+    border: 1px solid #ccc;
+    margin-top: 15px;
+}
+
+
+.card-header {
+    padding: 10px 10px 5px 10px;
+}
+
+.card-body {
+    display: flex;
+    justify-content: center;
+}
+
+.card-footer{
+    justify-content: space-between;
+    display: flex;
+}
