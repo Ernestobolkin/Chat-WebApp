@@ -12,6 +12,10 @@
     min-width: 20vw;
 }
 
+.card-container{
+    width: max-content;
+}
+
 .row {
     flex-direction: column;
 }
