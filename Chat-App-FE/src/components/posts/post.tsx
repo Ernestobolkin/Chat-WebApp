@@ -24,10 +24,9 @@ const PostListComponent: React.FC = () => {
             <div>
                 <PostCreationComponent />
             </div>
-            <h2>Posts</h2>
             <div className="row">
                 {posts.map((post, index) => (
-                    <div className="col-md-4 mb-4" key={index}>
+                    <div className="col-md-4 mb-4 card-container" key={index}>
                         <div className="card" style={{ width: '18rem' }}>
                             <div className="card-header">
                                 <h5 className="card-title">
@@ -51,11 +50,11 @@ const PostListComponent: React.FC = () => {
                                 {/* Add comment count and link */}
                             </div>
                             <div className="card-footer">
-                            <a href="" className="comments-link">
+                            <a href="#" className="comments-link">
                                     {post.commentsCount} Comments 
                                 </a>
                                 <button className="btn btn-primary">Like 
-                                <span className="badge badge-light">{post.likes.length}</span>
+                                <span className="badge badge-light">{post?.likes?.length}</span>
                                 </button>
                             </div>
                         </div>

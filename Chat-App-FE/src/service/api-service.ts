@@ -8,7 +8,7 @@ export const loginRequest = async( userData:User ) => {
         const response = await generalRequest("login", "POST", userData);
         if(response && !response?.data?.code){
             sessionStorage.setItem("token", response.token);
-            return true
+            return response.user;
         }
         return false
     }catch(error){

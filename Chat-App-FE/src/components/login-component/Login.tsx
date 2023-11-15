@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import { loginRequest } from "../../service/api-service";
-import useAuthStore from "../../stores/authStore";
+import {useAuthStore, useUserDataStore} from "../../stores/authStore";
 import SuccessButton from "../Reusable/button";
 import PasswordInput from "../Reusable/password-input/password-input";
 import "./Login.style.css";
@@ -12,6 +12,7 @@ const Login: React.FC = () => {
     password: "",
   });
   const { signIn, signOut} = useAuthStore();
+  const { setUserData } = useUserDataStore();
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -26,6 +27,10 @@ const Login: React.FC = () => {
     const res = await loginRequest(formData);
     if (res) {
       signIn();
+      setUserData({
+        email: res.email,
+        username: res.username,
+      });
     }else{
       signOut()
     }

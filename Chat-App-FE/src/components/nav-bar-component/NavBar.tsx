@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { generalRequest } from "../../service/api-service";
 import "./NavBar.style.css";
 import SuccessButton from "../Reusable/button";
-import useAuthStore from "../../stores/authStore";
+import { useAuthStore, useUserDataStore } from "../../stores/authStore";
 import { NavBarContext, SystemRoutes } from "../../enums/generalEnum";
 
 
 const NavBar: React.FC = () => {
 
   const { isSignedIn, signIn } = useAuthStore();
+  const { userData } = useUserDataStore();
+  let userIconTemp = ''
 
   const buttonList = [
     {
@@ -26,9 +28,22 @@ const NavBar: React.FC = () => {
     }
   ]
 
+  useEffect(() => {
+    if(userData?.username.length > 0){
+      createIconTemp()
+    }
+  }, [isSignedIn])
+
+  const createIconTemp = () => {
+    userIconTemp = userData.username.split('')[0].toLocaleUpperCase()
+    console.log(userIconTemp)
+  }
+
   const testUrl = async () => {
     const response = await generalRequest('test', 'GET')
     console.log(response);
+    console.log(userData);
+    console.log(userIconTemp)
   }
 
   return (
@@ -70,7 +85,7 @@ const NavBar: React.FC = () => {
             {isSignedIn ? (
               <>
                 <div className={"circle-icon active-icon"}>
-                  <span>T</span>
+                  <span>{userIconTemp}</span>
                 </div>
                 {/* TODO: add profile component */}
               </>

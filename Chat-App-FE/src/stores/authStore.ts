@@ -6,11 +6,31 @@ interface AuthStoreState {
   signOut: () => void;
 }
 
+interface UserDataStoreState {
+  userData:{
+    username: string;
+    email: string;
+  }
+  setUserData: (userData: any) => void;
+}
+
 const useAuthStore = create<AuthStoreState>((set) => ({
   isSignedIn: false,
   signIn: () => set({ isSignedIn: true }),
   signOut: () => set({ isSignedIn: false }),
 }));
 
-export default useAuthStore;
+
+const useUserDataStore = create<UserDataStoreState>((set) => ({
+  userData: {
+    username: '',
+    email: ''
+  },
+  setUserData: (userData: any) => set({ userData }),
+}));
+
+export {
+  useAuthStore,
+  useUserDataStore
+};
 export type { AuthStoreState };

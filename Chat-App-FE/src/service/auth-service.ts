@@ -1,4 +1,4 @@
-import useAuthStore, { AuthStoreState } from "../stores/authStore";
+import { useAuthStore, AuthStoreState } from "../stores/authStore";
 
 
 export const logOut = () => {
