@@ -1,5 +1,5 @@
 import { UserRepoRegisterInterface } from "../interfaces/user";
-import { ErrorMessage } from "../interfaces/system";
+import { GeneralResponse } from "../interfaces/system";
 import { User } from "../models/user";
 import { handleCatchError } from "../service/errorHandlerService";
 import { UserInterface } from "../interfaces/user";
@@ -13,7 +13,7 @@ export const fetchUserDataById = async (userId: string):Promise<UserInterface | 
     }
 }
 
-export const fetchUserByField = async (field: string, value?: string): Promise<any | ErrorMessage> => {
+export const fetchUserByField = async (field: string, value?: string): Promise<any | GeneralResponse> => {
     try {
         const query = !value ? { [field]: field } : { [field]: value };
         return await User.findOne(query);

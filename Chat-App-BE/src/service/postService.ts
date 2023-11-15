@@ -1,10 +1,10 @@
 import { PostPut } from "../interfaces/post";
-import { ErrorMessage } from "../interfaces/system";
+import { GeneralResponse } from "../interfaces/system";
 import { PostCodes, GeneralCodes } from "../enums/SystemCodes";
 import { UserInterface } from "../interfaces/user";
 import { insertNewPost, fetchAllPosts } from "../repository/postRepository";
 
-export const createPostService = async (postData: PostPut, user: UserInterface): Promise<ErrorMessage | any> => {
+export const createPostService = async (postData: PostPut, user: UserInterface): Promise<GeneralResponse | any> => {
     try {
         const { textContent, imageContent } = postData;
         if (!textContent) {
@@ -34,7 +34,7 @@ export const createPostService = async (postData: PostPut, user: UserInterface):
 }
 
 
-export const fetchAllPostsService = async (): Promise<ErrorMessage | any>  => {
+export const fetchAllPostsService = async (): Promise<GeneralResponse | any>  => {
     try {
         const posts = await fetchAllPosts();
         if(!posts) {

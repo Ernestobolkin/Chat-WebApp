@@ -15,7 +15,7 @@ registerRoute.post('/', async (req: Request, res: Response) => {
                 code: response.code
             });
         }
-        return res.status(200).json({});
+        return res.status(200).json({data: response.data});
     } catch (error) {
         //TODO add error handling middleware or method
         console.error(error);

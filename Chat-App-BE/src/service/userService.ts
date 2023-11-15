@@ -1,12 +1,12 @@
 import { config } from "../config";
 import { UserRegisterInterface, UserRepoRegisterInterface } from "../interfaces/user";
-import { ErrorMessage } from "../interfaces/system";
+import { GeneralResponse } from "../interfaces/system";
 import { fetchUserByField, insertNewUser } from "../repository/userRepository";
 import { hashPassword, verifyPassword } from "./passwordService";
 import { RegisterCodes, GeneralCodes, LoginCodes } from "../enums/SystemCodes";
 import { generateToken } from "./jsonwebtokenMiddleware";
 
-export const registerService = async (userData: UserRegisterInterface): Promise<ErrorMessage | any> => {
+export const registerService = async (userData: UserRegisterInterface): Promise<GeneralResponse | any> => {
     try {
         const { username, email, password, confirmPassword } = userData;
         const passwordValidation = validatePassword(password, confirmPassword);
@@ -38,14 +38,12 @@ export const registerService = async (userData: UserRegisterInterface): Promise<
             email,
             passwordHash: hashedPassword
         }
-        const insertNewUserError = await insertNewUser(userToInsert);
-        if (typeof insertNewUserError !== 'boolean') {
-            return insertNewUserError;
-        }
+        const newUser = await insertNewUser(userToInsert);
 
         return {
             message: 'User registered successfully',
-            code: GeneralCodes.OK
+            code: GeneralCodes.OK,
+            data:newUser
         }
 
     } catch (error) {
@@ -57,7 +55,7 @@ export const registerService = async (userData: UserRegisterInterface): Promise<
     }
 }
 
-const validatePassword = (password: string, confirmPassword: string): ErrorMessage | boolean => {
+const validatePassword = (password: string, confirmPassword: string): GeneralResponse | boolean => {
     if (password !== confirmPassword) {
         return {
             message: 'Passwords do not match',
@@ -75,7 +73,7 @@ const validatePassword = (password: string, confirmPassword: string): ErrorMessa
 }
 
 
-const validateEmail = (email: string): ErrorMessage | boolean => {
+const validateEmail = (email: string): GeneralResponse | boolean => {
     if (!config.EMAIL_REGEX.test(email)) {
         return {
             message: 'Email is invalid',
@@ -86,7 +84,7 @@ const validateEmail = (email: string): ErrorMessage | boolean => {
 }
 
 
-export const loginService = async (userData: UserRegisterInterface): Promise<ErrorMessage | any> => {
+export const loginService = async (userData: UserRegisterInterface): Promise<GeneralResponse> => {
     try {
         const user = await fetchUserByField('email', userData.email);
         if (!user?._id) {
@@ -106,7 +104,10 @@ export const loginService = async (userData: UserRegisterInterface): Promise<Err
 
         const token = generateToken(user._id);
         return {
-            token, 
+            data:{
+                token,
+                user: handleUserDataForResponse(user)
+            }, 
         }
     } catch (error) {
         console.error(error);
@@ -114,5 +115,14 @@ export const loginService = async (userData: UserRegisterInterface): Promise<Err
             message: 'Internal server error',
             code: LoginCodes.ERROR_COULD_NOT_LOGIN
         }
+    }
+}
+
+
+export const handleUserDataForResponse = (user: any): any => {
+    const {username, email } = user;
+    return {
+        username,
+        email
     }
 }

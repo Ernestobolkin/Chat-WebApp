@@ -1,6 +1,7 @@
-export interface ErrorMessage {
+export interface GeneralResponse {
     message?: string;
     code?: string;
+    data?: any;
 }
 
 declare global {
