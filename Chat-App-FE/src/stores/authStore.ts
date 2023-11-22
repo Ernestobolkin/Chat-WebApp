@@ -8,7 +8,8 @@ interface AuthStoreState {
 
 interface UserDataStoreState {
   userData:{
-    username: string;
+    firstName: string;
+    lastName: string;
     email: string;
   }
   setUserData: (userData: any) => void;
@@ -23,7 +24,8 @@ const useAuthStore = create<AuthStoreState>((set) => ({
 
 const useUserDataStore = create<UserDataStoreState>((set) => ({
   userData: {
-    username: '',
+    firstName: '',
+    lastName: '',
     email: ''
   },
   setUserData: (userData: any) => set({ userData }),

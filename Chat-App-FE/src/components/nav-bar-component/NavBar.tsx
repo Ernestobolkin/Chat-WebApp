@@ -29,13 +29,13 @@ const NavBar: React.FC = () => {
   ]
 
   useEffect(() => {
-    if(userData?.username.length > 0){
+    if(userData?.firstName?.length > 0){
       createIconTemp()
     }
   }, [isSignedIn])
 
   const createIconTemp = () => {
-    userIconTemp = userData.username.split('')[0].toLocaleUpperCase()
+    userIconTemp = userData.firstName.split('')[0].toLocaleUpperCase()
     console.log(userIconTemp)
   }
 

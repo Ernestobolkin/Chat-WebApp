@@ -19,6 +19,15 @@ const PostListComponent: React.FC = () => {
         setPosts(response);
     }
 
+    const handleLike = async (postId: string) => {
+        console.log(postId)
+        const response = await generalRequest(`posts/${postId}/like`, 'POST');
+        if (response?.message && !response.data) {
+            return alert(response.message); // TODO add a toast 
+        }
+        setPosts(response);
+    }
+
     return (
         <div>
             <div>
@@ -53,7 +62,7 @@ const PostListComponent: React.FC = () => {
                             <a href="#" className="comments-link">
                                     {post.commentsCount} Comments 
                                 </a>
-                                <button className="btn btn-primary">Like 
+                                <button className="btn btn-primary" onClick={async () => handleLike(post?._id)}>Like 
                                 <span className="badge badge-light">{post?.likes?.length}</span>
                                 </button>
                             </div>

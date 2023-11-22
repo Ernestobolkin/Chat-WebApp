@@ -67,6 +67,7 @@ a:hover {
 input[type="text"],
 input[type="password"],
 input[type="email"],
+input[type="date"],
 textarea,
 select {
   width: 100%;
@@ -76,7 +77,15 @@ select {
   border-radius: 4px;
 }
 
+input[type="text"]:focus{
+  outline: none;
+  border: 1px solid #007bff53;
+}
 
+
+input[type="date"]{
+  cursor: text ;
+}
 
 .component-container{
   display: flex;

@@ -59,7 +59,11 @@ export const generalRequest = async (url: string, method: string, body?: any) =>
             window.location.href = "/login";
             logOut();
         }
-        return responseError;
+        const resError = {
+            message: errorHandler(responseError),
+            code: responseError?.data?.code
+        }
+        return resError;
     }
 };
 
@@ -72,4 +76,15 @@ const getHeaders = () => {
         };
     }
     return headers;
+}
+
+const errorHandler = (error:any) => {
+    let context = "";
+
+    switch (error.code) {
+        default:
+            context = "Something went wrong";
+            break;
+    }
+    return context;
 }

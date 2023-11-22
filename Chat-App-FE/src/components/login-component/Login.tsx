@@ -24,7 +24,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await loginRequest(formData);
+    const res = await loginRequest(formData); //TODO add handle error
     if (res) {
       signIn();
       setUserData({
