@@ -1,14 +1,18 @@
 export interface UserRegisterInterface {
-    username: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
     confirmPassword: string;
+    birthDate: string;
 }
 
 export interface UserRepoRegisterInterface{
-    username: string;
+    firstName: string;
+    lastName: string;
     email: string;
     passwordHash: string;
+    birthDate: Date;
 } 
 
 

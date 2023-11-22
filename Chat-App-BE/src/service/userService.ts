@@ -8,7 +8,7 @@ import { generateToken } from "./jsonwebtokenMiddleware";
 
 export const registerService = async (userData: UserRegisterInterface): Promise<GeneralResponse | any> => {
     try {
-        const { username, email, password, confirmPassword } = userData;
+        const { firstName, lastName, email, password, confirmPassword } = userData;
         const passwordValidation = validatePassword(password, confirmPassword);
         if (typeof passwordValidation !== 'boolean') {
             return passwordValidation;
@@ -24,18 +24,15 @@ export const registerService = async (userData: UserRegisterInterface): Promise<
                 code: RegisterCodes.ERROR_EMAIL_EXISTS,
             }
         }
-        const usernameUserExists = await fetchUserByField('username', username);
-        if (usernameUserExists) {
-            return {
-                message: 'Username already exists',
-                code: RegisterCodes.ERROR_USER_NAME_EXISTS,
-            }
-        }
+
+        const date = new Date(userData.birthDate);
 
         const hashedPassword = await hashPassword(password);
         const userToInsert: UserRepoRegisterInterface = {
-            username,
+            firstName, 
+            lastName, 
             email,
+            birthDate: date,
             passwordHash: hashedPassword
         }
         const newUser = await insertNewUser(userToInsert);

@@ -2,11 +2,17 @@ import mongoose from "mongoose";
 
 
 const userSchema = new mongoose.Schema({
-    username: {
+    firstName: {
         type: String,
         required: true,
-        unique: true,
-        minlength: 3,
+        minlength: 2,
+        maxlength: 50,
+    },
+    lastName: {
+        type: String,
+        required: true,
+        minlength: 2,
+        maxlength: 50,
     },
     email: {
         type: String,
@@ -20,6 +26,10 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    birthDate: {
+        type: Date,
+        required: true,
+    }
     // avatar: {
     //     type: String,
     // },
