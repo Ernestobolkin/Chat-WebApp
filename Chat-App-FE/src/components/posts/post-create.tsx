@@ -3,8 +3,11 @@ import usePostStore from '../../stores/postStore'; // Adjust the import path
 import { generalRequest } from '../../service/api-service';
 import "./post-create.style.css";
 import { useUserDataStore } from '../../stores/authStore';
+interface PostCreationComponentProps {
+  onFetchPosts: () => void;
+}
 
-const PostCreationComponent: React.FC = () => {
+const PostCreationComponent: React.FC<PostCreationComponentProps> = ({ onFetchPosts }) => {
   const [newPostText, setNewPostText] = useState('');
   const addPost = usePostStore((state: any) => state.addPost);
   const { userData } = useUserDataStore();
@@ -16,17 +19,21 @@ const PostCreationComponent: React.FC = () => {
       await generalRequest('posts/create', 'POST', { textContent: newPostText });
       //TODO add toast
       setNewPostText('');
+      onFetchPosts();
     }
   };
 
   const getRandomPlaceholder = () => {
+
+    const today = new Date().getHours();
+
     const placeholders = [
       // Personalized Prompts
-      `What's new in your world today, ${userData?.username}?`,
-      `Share a highlight from your day, ${userData?.username}!`,
-      `What's a recent discovery you've made, ${userData?.username}?`,
-      `What's something you're looking forward to, ${userData?.username}?`,
-      `Share a memory or story, ${userData?.username}!`,
+      `What's new in your world today, ${userData?.firstName}?`,
+      `Share a highlight from your day, ${userData?.firstName}!`,
+      `What's a recent discovery you've made, ${userData?.firstName}?`,
+      `What's something you're looking forward to, ${userData?.firstName}?`,
+      `Share a memory or story, ${userData?.firstName}!`,
     
       // Instructions or Guidelines
       "Remember to keep it friendly and constructive.",
@@ -43,9 +50,10 @@ const PostCreationComponent: React.FC = () => {
       "Imagine a perfect day - what does it look like?"
     ];
   
+    // same propmt for the whole day
+    const index = today % placeholders.length;
+    return placeholders[index];
     
-    const randomIndex = Math.floor(Math.random() * placeholders.length);
-    return placeholders[randomIndex];
   }
 
   return (

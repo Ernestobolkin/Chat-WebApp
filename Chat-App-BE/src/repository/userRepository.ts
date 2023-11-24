@@ -16,7 +16,7 @@ export const fetchUserDataById = async (userId: string):Promise<UserInterface | 
 export const fetchUserByField = async (field: string, value?: string): Promise<any | GeneralResponse> => {
     try {
         const query = !value ? { [field]: field } : { [field]: value };
-        return await User.findOne(query);
+        return await User.findOne(query).lean();
     } catch (error) {
        throw handleCatchError(error, 'Failed to fetch user data');
     }

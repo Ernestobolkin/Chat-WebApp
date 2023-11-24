@@ -2,7 +2,7 @@ import { PostPut } from "../interfaces/post";
 import { GeneralResponse } from "../interfaces/system";
 import { PostCodes, GeneralCodes } from "../enums/SystemCodes";
 import { UserInterface } from "../interfaces/user";
-import { insertNewPost, fetchAllPosts } from "../repository/postRepository";
+import { insertNewPost, fetchAllPosts, fetchPostById, likeOrDislike } from "../repository/postRepository";
 
 export const createPostService = async (postData: PostPut, user: UserInterface): Promise<GeneralResponse | any> => {
     try {
@@ -17,7 +17,7 @@ export const createPostService = async (postData: PostPut, user: UserInterface):
         const post = {
             textContent,
             imageContent,
-            author:user._id,
+            author: user._id,
         }
         await insertNewPost(post)
         return {
@@ -33,17 +33,71 @@ export const createPostService = async (postData: PostPut, user: UserInterface):
     }
 }
 
+export const deletePostService = async (postId: string, user: UserInterface): Promise<GeneralResponse | any> => {
+    try {
+        const post = await fetchPostById(postId);
+        if (!post) {
+            return {
+                message: 'Could not fetch post',
+                code: PostCodes.ERROR_COULD_NOT_FETCH_POSTS
+            }
+        }
+        if (post?.author && post.author._id.toString() !== user._id.toString()) {
+            return {
+                message: 'Not authorized',
+                code: GeneralCodes.UNAUTHORIZED
+            }
+        }
+        await post.deleteOne({ _id: postId});
+        return {
+            message: 'Post deleted successfully',
+            code: GeneralCodes.OK
+        }
+    } catch (error) {
+        console.error(error);
+        return {
+            message: 'Internal server error',
+            code: PostCodes.ERROR_COULD_NOT_DELETE_POST
+        }
+    }
 
-export const fetchAllPostsService = async (): Promise<GeneralResponse | any>  => {
+}
+
+
+export const fetchAllPostsService = async (): Promise<GeneralResponse | any> => {
     try {
         const posts = await fetchAllPosts();
-        if(!posts) {
+        if (!posts) {
             return {
                 message: 'Could not fetch posts',
                 code: PostCodes.ERROR_COULD_NOT_FETCH_POSTS
             }
         }
         return posts;
+    } catch (error) {
+        console.error(error);
+        return {
+            message: 'Internal server error',
+            code: PostCodes.ERROR_COULD_NOT_FETCH_POSTS
+        }
+    }
+}
+
+
+export const likePostService = async (postId: string, user: UserInterface): Promise<GeneralResponse | any> => {
+    try {
+        const post = await fetchPostById(postId);
+        if (!post) {
+            return {
+                message: 'Could not fetch post',
+                code: PostCodes.ERROR_COULD_NOT_FETCH_POSTS
+            }
+        }
+        const userData = {
+            userId: user._id,
+            email: user.email,
+        };
+        await likeOrDislike(postId, userData)
     } catch (error) {
         console.error(error);
         return {
