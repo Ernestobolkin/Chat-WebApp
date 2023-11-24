@@ -11,6 +11,8 @@ interface UserDataStoreState {
     firstName: string;
     lastName: string;
     email: string;
+    birthDate: string;
+    fullName: string;
   }
   setUserData: (userData: any) => void;
 }
@@ -26,7 +28,9 @@ const useUserDataStore = create<UserDataStoreState>((set) => ({
   userData: {
     firstName: '',
     lastName: '',
-    email: ''
+    email: '',
+    birthDate: '',
+    fullName: '',
   },
   setUserData: (userData: any) => set({ userData }),
 }));

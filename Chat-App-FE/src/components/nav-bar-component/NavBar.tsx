@@ -1,17 +1,18 @@
 import React, { useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { generalRequest } from "../../service/api-service";
 import "./NavBar.style.css";
 import SuccessButton from "../Reusable/button";
 import { useAuthStore, useUserDataStore } from "../../stores/authStore";
 import { NavBarContext, SystemRoutes } from "../../enums/generalEnum";
+import { getUserData, logOut } from "../../service/auth-service";
 
 
 const NavBar: React.FC = () => {
 
   const { isSignedIn, signIn } = useAuthStore();
-  const { userData } = useUserDataStore();
-  let userIconTemp = ''
+  const { userData, setUserData } = useUserDataStore();
+  const navigate = useNavigate();
 
   const buttonList = [
     {
@@ -25,26 +26,51 @@ const NavBar: React.FC = () => {
     {
       text: NavBarContext.LOGIN,
       link: SystemRoutes.LOGIN,
-    }
+      addition: {
+        text: NavBarContext.LOGOUT,
+        isActive: isSignedIn
+      }
+    },
   ]
 
   useEffect(() => {
-    if(userData?.firstName?.length > 0){
-      createIconTemp()
-    }
-  }, [isSignedIn])
+    const fetchData = async () => {
+      const userDataStorage = getUserData();
+      const hasData = Object.values(userDataStorage).some(Boolean);
+      if (hasData) {
+        const isValidToken = await checkIfAuth()
+        if (isValidToken) {
+          setUserData(userDataStorage);
+          signIn();
+        } else {
+          logOutHandler()
+        }
+      } else {
+        logOutHandler()
+      }
+    };
+    fetchData();
+  }, []);
+  const checkIfAuth = async () => {
+    return await generalRequest('auth', 'GET');
+  };
 
   const createIconTemp = () => {
-    userIconTemp = userData.firstName.split('')[0].toLocaleUpperCase()
-    console.log(userIconTemp)
+    return isSignedIn && userData?.firstName.split('')[0]
   }
 
   const testUrl = async () => {
-    const response = await generalRequest('test', 'GET')
+    const response = await generalRequest('auth', 'GET')
     console.log(response);
     console.log(userData);
-    console.log(userIconTemp)
   }
+
+  const logOutHandler = () => {
+    logOut();
+    setUserData({});
+    navigate(SystemRoutes.LOGIN);
+  }
+
 
   return (
     <div className="navbar-container">
@@ -73,8 +99,9 @@ const NavBar: React.FC = () => {
                     <NavLink
                       className={({ isActive }) => "nav-link" + (isActive ? " active" : "")}
                       to={button.link}
+                      onClick={(button.addition?.text && button.addition?.isActive) ? logOutHandler : undefined}
                     >
-                      {button.text}
+                      {(button.addition?.text && button.addition?.isActive) ? button.addition.text : button.text}
                     </NavLink>
                   </li>
                 ))
@@ -85,7 +112,7 @@ const NavBar: React.FC = () => {
             {isSignedIn ? (
               <>
                 <div className={"circle-icon active-icon"}>
-                  <span>{userIconTemp}</span>
+                  <span>{createIconTemp()}</span>
                 </div>
                 {/* TODO: add profile component */}
               </>
