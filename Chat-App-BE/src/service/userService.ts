@@ -29,8 +29,8 @@ export const registerService = async (userData: UserRegisterInterface): Promise<
 
         const hashedPassword = await hashPassword(password);
         const userToInsert: UserRepoRegisterInterface = {
-            firstName, 
-            lastName, 
+            firstName,
+            lastName,
             email,
             birthDate: date,
             passwordHash: hashedPassword
@@ -40,7 +40,7 @@ export const registerService = async (userData: UserRegisterInterface): Promise<
         return {
             message: 'User registered successfully',
             code: GeneralCodes.OK,
-            data:newUser
+            data: newUser
         }
 
     } catch (error) {
@@ -88,7 +88,7 @@ export const loginService = async (userData: UserRegisterInterface): Promise<Gen
             return {
                 message: 'User does not exist',
                 code: LoginCodes.ERROR_WRONG_EMAIL_OR_PASSWORD
-            }            
+            }
         }
 
         const passwordMatch = await verifyPassword(userData.password, user.passwordHash);
@@ -101,10 +101,16 @@ export const loginService = async (userData: UserRegisterInterface): Promise<Gen
 
         const token = generateToken(user._id);
         return {
-            data:{
+            data: {
                 token,
-                user: handleUserDataForResponse(user)
-            }, 
+                user: {
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email,
+                    birthDate: user.birthDate,
+                    _id: user._id,
+                }
+            },
         }
     } catch (error) {
         console.error(error);
@@ -112,14 +118,5 @@ export const loginService = async (userData: UserRegisterInterface): Promise<Gen
             message: 'Internal server error',
             code: LoginCodes.ERROR_COULD_NOT_LOGIN
         }
-    }
-}
-
-
-export const handleUserDataForResponse = (user: any): any => {
-    const {username, email } = user;
-    return {
-        username,
-        email
     }
 }

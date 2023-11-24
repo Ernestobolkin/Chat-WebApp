@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import { loginRequest } from "../../service/api-service";
-import {useAuthStore, useUserDataStore} from "../../stores/authStore";
+import { useAuthStore, useUserDataStore } from "../../stores/authStore";
 import SuccessButton from "../Reusable/button";
 import PasswordInput from "../Reusable/password-input/password-input";
 import "./Login.style.css";
@@ -11,7 +11,7 @@ const Login: React.FC = () => {
     email: "",
     password: "",
   });
-  const { signIn, signOut} = useAuthStore();
+  const { signIn, signOut } = useAuthStore();
   const { setUserData } = useUserDataStore();
 
   const handleInputChange = (event) => {
@@ -27,11 +27,16 @@ const Login: React.FC = () => {
     const res = await loginRequest(formData); //TODO add handle error
     if (res) {
       signIn();
-      setUserData({
+      const userData = {
         email: res.email,
-        username: res.username,
-      });
-    }else{
+        firstName: res.firstName,
+        lastName: res.lastName,
+        fullName: res.firstName + ' ' + res.lastName,
+        birthDate: res.birthDate,
+      }
+      setUserData(userData);
+      sessionStorage.setItem('userData', JSON.stringify(userData))
+    } else {
       signOut()
     }
   };
@@ -42,17 +47,17 @@ const Login: React.FC = () => {
       <form onSubmit={handleSubmit}>
         <div className="form-group input-container">
           <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="text"
-            id="email"
-            name="email"
-            className="form-control"
-            placeholder="Enter your email"
-            value={formData.email}
-            onChange={handleInputChange}
-            required
-          />
+            <label htmlFor="email">Email:</label>
+            <input
+              type="text"
+              id="email"
+              name="email"
+              className="form-control"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+            />
           </div>
         </div>
         <div className="form-group">

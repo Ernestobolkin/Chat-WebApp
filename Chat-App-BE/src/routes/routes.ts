@@ -3,6 +3,7 @@ import { authenticate } from "../service/jsonwebtokenMiddleware";
 import loginRoute from "./loginRoute"
 import registerRoute from "./registerRoute";
 import postRoute from "./postRoute";
+import e from "express";
 
 const ROUTES_PATHS = {
     LOGIN: '/login',
@@ -10,11 +11,12 @@ const ROUTES_PATHS = {
     POSTS: '/posts'
 }
 
-const test = express.Router();
 
-test.get('',   authenticate, (req, res) => {
-    return res.status(200).json({message: "works"})
+const authCheck = express.Router();
+authCheck.get('', authenticate, (req, res) => {
+    return res.status(200).json({valid: true})
 })
+
 export class Routes {
     routes = ROUTES_PATHS;
     expressRoutes = express.Router()
@@ -22,7 +24,7 @@ export class Routes {
         [ROUTES_PATHS.LOGIN]: loginRoute,
         [ROUTES_PATHS.REGISTER]: registerRoute,
         [ROUTES_PATHS.POSTS]: postRoute, //TODO: add post route controller here [ROUTES_PATHS.CREATEPOST]: postRoute,
-        "/test":test
+        "/auth":authCheck
     }
 
     constructor() {
