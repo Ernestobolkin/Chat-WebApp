@@ -5,6 +5,7 @@
 export enum GeneralCodes {
     GENERAL_ERROR = "gn",
     OK = "",
+    UNAUTHORIZED = "gn1",
 }
 
 export enum LoginCodes {
