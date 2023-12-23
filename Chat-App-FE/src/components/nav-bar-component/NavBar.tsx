@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { generalRequest } from "../../service/api-service";
@@ -56,7 +57,7 @@ const NavBar: React.FC = () => {
   };
 
   const createIconTemp = () => {
-    return isSignedIn && userData?.firstName.split('')[0]
+    return userData?.firstName?.split('')[0]
   }
 
   const testUrl = async () => {
@@ -69,6 +70,10 @@ const NavBar: React.FC = () => {
     logOut();
     setUserData({});
     navigate(SystemRoutes.LOGIN);
+  }
+
+  const navigateToProfile = () => {
+    navigate(SystemRoutes.PROFILE);
   }
 
 
@@ -111,7 +116,7 @@ const NavBar: React.FC = () => {
           <div>
             {isSignedIn ? (
               <>
-                <div className={"circle-icon active-icon"}>
+                <div onClick={navigateToProfile} className={"circle-icon active-icon"}>
                   <span>{createIconTemp()}</span>
                 </div>
                 {/* TODO: add profile component */}

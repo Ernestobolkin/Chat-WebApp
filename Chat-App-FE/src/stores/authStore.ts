@@ -7,13 +7,13 @@ interface AuthStoreState {
 }
 
 interface UserDataStoreState {
-  userData:{
+  userData: {
     firstName: string;
     lastName: string;
     email: string;
     birthDate: string;
     fullName: string;
-  }
+  },
   setUserData: (userData: any) => void;
 }
 
@@ -32,6 +32,7 @@ const useUserDataStore = create<UserDataStoreState>((set) => ({
     birthDate: '',
     fullName: '',
   },
+  
   setUserData: (userData: any) => set({ userData }),
 }));
 

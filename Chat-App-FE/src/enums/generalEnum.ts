@@ -3,6 +3,7 @@ export enum SystemRoutes {
     REGISTER = "/register",
     LOGOUT = "/logout",
     HOME = "/",
+    PROFILE = "/profile",
 }
 
 
